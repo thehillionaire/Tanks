@@ -4,16 +4,25 @@
  */
 
 import java.awt.event.*;
-import javax.swing.JFrame;
+import javax.swing.*;
 import java.awt.*;
 
 
 //The class that contains the paint method needs to inherit from Component, the class that contains the pain method and binds the component to the window.
+
+
+
+
 class MyFigures extends Canvas
 {
 
     int myX = 50;
     int myY = 50;
+    int yourX = 100;
+    int yourY = 100;
+    int bulletX;
+    int bulletY;
+    boolean shoot = false;
 
     public MyFigures() {
         addKeyListener(new KeyAdapter() {
@@ -21,6 +30,14 @@ class MyFigures extends Canvas
             public void keyPressed(KeyEvent evt) {
                 moveIt(evt);
             }
+
+        });
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent evt) {
+                ShootIt(evt);
+            }
+
         });
     }
 
@@ -75,6 +92,20 @@ class MyFigures extends Canvas
         repaint();
     }
 
+    public void ShootIt(KeyEvent evt)
+    {
+        switch (evt.getKeyCode()) {
+            case KeyEvent.VK_ENTER:
+
+                shoot = true;
+                bulletX = myX + 30;
+                bulletY = myY+ 15;
+                System.out.println("shoot");
+        }
+        repaint();
+       // shoot = false;
+
+    }
 
 
         //Here, we just write the commands to draw a bunch of stuff.
@@ -82,13 +113,28 @@ class MyFigures extends Canvas
     {
 
         g.setColor(Color.RED);
-        g.fillOval(myX, myY, 30, 30);
+        g.fillRect(myX, myY, 30, 30);
+
+        g.setColor(Color.BLUE);
+        g.fillRect(yourX, yourY, 30, 30);
+
 
         g.setColor(Color.BLACK);
         g.fillRect(320,50 , 20, 275);
         g.fillRect(80,50 , 20, 275);
 
+        if(shoot == true)
+        {
+            g.setColor(Color.BLACK);
+            g.fillOval(bulletX, bulletY,5,5);
+            bulletX = bulletX + 1;
+            repaint();
+            if(bulletX >= yourX- 15 || bulletX <= yourX +15 && bulletY >= yourY- 15 || bulletY <= yourY +15)
+            {
+                g.clearRect(yourX, yourY, 30, 30);
+            }
 
+        }
 
 
 
@@ -115,7 +161,6 @@ public class MyDrawing
         window.getContentPane().setBackground(Color.LIGHT_GRAY);
         //Attach the Canvas (the figures we just described) to the window
         window.getContentPane().add(ex);
-        window.pack();
         window.setResizable(false);
         //make the window visible
         window.setVisible(true);
