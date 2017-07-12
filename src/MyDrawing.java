@@ -132,8 +132,10 @@ class Coordinate {
 
         if(max1x > min2x && max1x < max2x)
         {
-            if(max1y > min2y && max1y < max2y)
+            if(max1y > min2y && max1y < max2y) {
+                System.out.println("collision detected!");
                 return true;
+            }
             else
                 return false;
         }
@@ -327,6 +329,10 @@ class game extends Canvas
 
     }
 
+    public void Checkwallcollision(tank t)
+    {
+
+    }
 
         //Here, we just write the commands to draw a bunch of stuff.
     public void paint(Graphics g)
@@ -345,39 +351,42 @@ class game extends Canvas
 
         if(shoot1 == true)
         {
-            g.setColor(Color.BLACK);
+
             g.fillOval(bullet1X, bullet1Y,5,5);
             bullet1X = bullet1X + 1;
 
-            Coordinate b = new Coordinate(bullet1X, bullet1Y, 5);
-            if(b.intersect(b, p2.getCoordinate()) == true)
-            {
-                g.clearRect(p2.getCoordinate().getXcord(),p2.getCoordinate().getYcord(), 30,30);
-                bullet1X = bullet1X -1;
-                g.clearRect(bullet1X,bullet1Y,5,5);
 
-            }
-            repaint();
+
+
 
         }
+
          if(shoot2 == true )
          {
-             g.setColor(Color.BLACK);
              g.fillOval(bullet2X, bullet2Y,5,5);
              bullet2X = bullet2X - 1;
 
-             Coordinate b = new Coordinate(bullet1X, bullet1Y, 5);
-             if(b.intersect(b, p1.getCoordinate()) == true)
-             {
-                 g.clearRect(p1.getCoordinate().getXcord(),p1.getCoordinate().getYcord(), 30,30);
-                 bullet1X = bullet1X + 1;
-                 g.clearRect(bullet2X,bullet2Y,5,5);
 
-             }
-             repaint();
          }
 
+        Coordinate b = new Coordinate(bullet1X, bullet1Y, 5);
+        Coordinate c = new Coordinate(bullet2X, bullet2Y, 5);
+        if(b.intersect(b, p2.getCoordinate()) == true)
+        {
+            g.clearRect(p2.getCoordinate().getXcord(),p2.getCoordinate().getYcord(), 30,30);
+            bullet1X = bullet1X - 1;
+            g.clearRect(bullet1X,bullet1Y,5,5);
 
+        }
+
+        else if(b.intersect(c, p1.getCoordinate()) == true)
+        {
+            g.clearRect(p1.getCoordinate().getXcord(),p1.getCoordinate().getYcord(), 30,30);
+            bullet1X = bullet1X + 1;
+            g.clearRect(bullet2X,bullet2Y,5,5);
+
+        }
+        repaint();
 
 
     }
