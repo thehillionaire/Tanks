@@ -98,8 +98,11 @@ public class Coordinate {
 
         if(max1x > min2x && max1x < max2x)
         {
-            if(max1y > min2y && max1y < max2y)
+            if(max1y > min2y && max1y < max2y) {
+                System.out.println("collision detected!");
                 return true;
+            }
+
             else
                 return false;
         }

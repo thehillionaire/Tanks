@@ -13,8 +13,8 @@ import java.awt.*;
 class tank {
 
     protected Coordinate location;
-    protected int health;
-    protected Color look;
+    //protected int health;
+   // protected Color look;
 
     public Coordinate getCoordinate()
     {
@@ -29,17 +29,16 @@ class tank {
     tank(Coordinate start, Color c)
     {
         location = start;
-        look = c;
-        health = 3;
+      // look = c;
+       // health = 3;
     }
 }
 
 
-class game extends Canvas
-{
+class game extends Canvas {
 
-    tank p1 = new tank(new Coordinate(50,50, 30),Color.RED);
-    tank p2 = new tank(new Coordinate(200,200, 30),Color.BLUE);
+    tank p1 = new tank(new Coordinate(50, 50, 30), Color.RED);
+    tank p2 = new tank(new Coordinate(200, 200, 30), Color.BLUE);
     Coordinate p1location = new Coordinate();
     Coordinate p2location = new Coordinate();
 
@@ -53,6 +52,15 @@ class game extends Canvas
     int bullet2Y;
     boolean shoot1 = false;
     boolean shoot2 = false;
+
+    public boolean checkcollision(Coordinate a, Coordinate b, int side1A, int side2A, int side1B, int side2B) {
+        Rectangle rect1 = new Rectangle(a.getXcord(), a.getYcord(), side1A, side2A);
+        Rectangle rect2 = new Rectangle(b.getXcord(), b.getYcord(), side1B, side2B);
+        if (rect1.intersects(rect2)) {
+            return true;
+        } else
+            return false;
+    }
 
     public game() {
         addKeyListener(new KeyAdapter() {
@@ -85,146 +93,144 @@ class game extends Canvas
         });
     }
 
-    public void moveIt2(KeyEvent evt)
-    {
+    public void moveIt2(KeyEvent evt) {
 
-
-
+        int lastspotX = yourX;
+        int lastspotY = yourY;
 
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_S:
-                if(yourY >= 350)
-                {
+                if (yourY >= 350) {
                     yourY = 350;
-                }
-                else
-                {
+                } else {
                     yourY += 25;
                 }
                 break;
             case KeyEvent.VK_W:
-                if(yourY <= 1)
-                {
+                if (yourY <= 1) {
                     yourY = 1;
-                }
-                else {
+                } else {
                     yourY -= 25;
                 }
                 break;
             case KeyEvent.VK_A:
-                if(yourX <= 1)
-                {
+                if (yourX <= 1) {
                     yourX = 1;
-                }
-                else
-                {
+                } else {
                     yourX -= 25;
                 }
                 break;
             case KeyEvent.VK_D:
-                if(yourX >= 375)
-                {
+                if (yourX >= 375) {
                     yourX = 375;
-                }
-                else
-                {
+                } else {
                     yourX += 25;
                 }
 
                 break;
         }
-        p2location.setCoordinate(yourX,yourY);
+        repaint();
+        p2location.setCoordinate(yourX, yourY);
+        if (evt.getKeyCode() == KeyEvent.VK_W || evt.getKeyCode() == KeyEvent.VK_S || evt.getKeyCode() == KeyEvent.VK_A || evt.getKeyCode() == KeyEvent.VK_D) {
+
+
+            if (checkcollision(p2location, new Coordinate(320, 50), 30, 30, 20, 275) || checkcollision(p2location, new Coordinate(80, 50), 30, 30, 20, 275)) {
+                System.out.println("collision detected with wall!");
+                yourX = lastspotX;
+                yourY = lastspotY;
+
+            }
+        }
+        p2location.setCoordinate(yourX, yourY);
         p2.setCoordinate(p2location);
         repaint();
     }
 
     public void moveIt(KeyEvent evt) {
 
-
+        int lastspotX = myX;
+        int lastspotY = myY;
 
 
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_DOWN:
-                if(myY >= 350)
-                {
+                if (myY >= 350) {
                     myY = 350;
-                }
-                else
-                {
+                } else {
                     myY += 25;
                 }
                 break;
             case KeyEvent.VK_UP:
-                if(myY <= 1)
-                {
+                if (myY <= 1) {
                     myY = 1;
-                }
-                else {
+                } else {
                     myY -= 25;
                 }
                 break;
             case KeyEvent.VK_LEFT:
-                if(myX <= 1)
-                {
+                if (myX <= 1) {
                     myX = 1;
-                }
-                else
-                {
+                } else {
                     myX -= 25;
                 }
                 break;
             case KeyEvent.VK_RIGHT:
-                if(myX >= 375)
-                {
+                if (myX >= 375) {
                     myX = 375;
-                }
-                else
-                {
+                } else {
                     myX += 25;
                 }
 
                 break;
         }
-        p1location.setCoordinate(myX,myY);
+        repaint();
+        p1location.setCoordinate(myX, myY);
+        if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_LEFT || evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+
+
+            if (checkcollision(p1location, new Coordinate(320, 50), 30, 30, 20, 275) || checkcollision(p1location, new Coordinate(80, 50), 30, 30, 20, 275)) {
+                System.out.println("collision detected with wall!");
+                myX = lastspotX;
+                myY = lastspotY;
+
+            }
+        }
+        p1location.setCoordinate(myX, myY);
         p1.setCoordinate(p1location);
         repaint();
     }
 
-    public void ShootIt2(KeyEvent evt)
-    {
+    public void ShootIt2(KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_R:
 
                 shoot2 = true;
                 bullet2X = yourX - 15;
                 bullet2Y = yourY + 15;
-                System.out.println("shoot 2");
+
         }
     }
 
-    public void ShootIt(KeyEvent evt)
-    {
+    public void ShootIt(KeyEvent evt) {
         switch (evt.getKeyCode()) {
             case KeyEvent.VK_ENTER:
 
                 shoot1 = true;
                 bullet1X = myX + 30;
-                bullet1Y = myY+ 15;
-                System.out.println("shoot 1");
+                bullet1Y = myY + 15;
+
         }
         //repaint();
-       // shoot = false;
+        // shoot = false;
 
     }
 
-    public void Checkwallcollision(tank t)
-    {
+    public void Checkwallcollision(tank t) {
 
     }
 
-        //Here, we just write the commands to draw a bunch of stuff.
-    public void paint(Graphics g)
-    {
+    //Here, we just write the commands to draw a bunch of stuff.
+    public void paint(Graphics g) {
 
         g.setColor(Color.RED);
         g.fillRect(myX, myY, 30, 30);
@@ -234,57 +240,64 @@ class game extends Canvas
 
 
         g.setColor(Color.BLACK);
-        g.fillRect(320,50 , 20, 275);
-        g.fillRect(80,50 , 20, 275);
+        g.fillRect(320, 50, 20, 275);
+        g.fillRect(80, 50, 20, 275);
 
-        if(shoot1 == true)
-        {
+        if (shoot1 == true) {
 
-            g.fillOval(bullet1X, bullet1Y,5,5);
+            g.fillOval(bullet1X, bullet1Y, 5, 5);
             bullet1X = bullet1X + 1;
-
-
-
 
 
         }
 
-         if(shoot2 == true )
-         {
-             g.fillOval(bullet2X, bullet2Y,5,5);
-             bullet2X = bullet2X - 1;
+        if (shoot2 == true) {
+            g.fillOval(bullet2X, bullet2Y, 5, 5);
+            bullet2X = bullet2X - 1;
 
 
-         }
+        }
 
         Coordinate b = new Coordinate(bullet1X, bullet1Y, 5);
         Coordinate c = new Coordinate(bullet2X, bullet2Y, 5);
-        if(b.intersect(b, p2.getCoordinate()) == true)
-        {
-            g.clearRect(p2.getCoordinate().getXcord(),p2.getCoordinate().getYcord(), 30,30);
+
+        if (checkcollision(b, p2.getCoordinate(), 5, 5, 30, 30) == true) {
+            System.out.println("collision detected! Player 1 shot Player 2");
+            g.clearRect(p2.getCoordinate().getXcord(), p2.getCoordinate().getYcord(), 30, 30);
             bullet1X = bullet1X - 1;
-            g.clearRect(bullet1X,bullet1Y,5,5);
+            g.clearRect(bullet1X, bullet1Y, 5, 5);
 
         }
+        if (checkcollision(c, p1.getCoordinate(), 5, 5, 30, 30) == true)
 
-        else if(b.intersect(c, p1.getCoordinate()) == true)
         {
-            g.clearRect(p1.getCoordinate().getXcord(),p1.getCoordinate().getYcord(), 30,30);
-            bullet1X = bullet1X + 1;
-            g.clearRect(bullet2X,bullet2Y,5,5);
+            System.out.println("collision detected! Player 2 shot player 1");
+            g.clearRect(p1.getCoordinate().getXcord(), p1.getCoordinate().getYcord(), 30, 30);
+            bullet1X = bullet1X;
+            g.clearRect(bullet2X, bullet2Y, 5, 5);
 
         }
         repaint();
 
+        if (checkcollision(b, new Coordinate(320, 50), 5, 5, 20, 275) || checkcollision(b, new Coordinate(80, 50), 5, 5, 20, 275))
+        {
+            bullet1X = bullet1X - 1;
+            g.clearRect(bullet1X, bullet1Y, 5, 5);
+
+        }
+
+        if (checkcollision(c, new Coordinate(80, 50), 5, 5, 20, 275) || checkcollision(c, new Coordinate(80, 50), 5, 5, 20, 275))
+        {
+            bullet1X = bullet1X + 1;
+            g.clearRect(bullet2X, bullet2Y, 5, 5);
+
+        }
+        repaint();
 
     }
 
-
 }
 
-
-//This is the main class the will contain the Window and all the aspects realted to the Window
-// We will draw figures on to the window by creating an object of the class above.
 public class MyDrawing
 {
     public static void main(String [] args)
@@ -305,7 +318,6 @@ public class MyDrawing
         ex.requestFocus();
     }
 }
-
 
 
 
