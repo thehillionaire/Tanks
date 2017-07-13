@@ -6,7 +6,7 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-
+//TODO fix player 2 weirdness w bullets and collisions, fix righthand obstacle collision weirdness, implement visible score, crashes?
 
 //The class that contains the paint method needs to inherit from Component, the class that contains the pain method and binds the component to the window.
 
@@ -37,8 +37,8 @@ class tank {
 
 class game extends Canvas {
 
-    tank p1 = new tank(new Coordinate(50, 50, 30), Color.RED);
-    tank p2 = new tank(new Coordinate(200, 200, 30), Color.BLUE);
+    tank p1 = new tank(new Coordinate(40, 150, 30), Color.RED);
+    tank p2 = new tank(new Coordinate(350, 150, 30), Color.BLUE);
     Coordinate p1location = new Coordinate();
     Coordinate p2location = new Coordinate();
 
@@ -52,6 +52,8 @@ class game extends Canvas {
     int bullet2Y;
     boolean shoot1 = false;
     boolean shoot2 = false;
+    boolean player1win = false;
+    boolean player2win = false;
 
     public boolean checkcollision(Coordinate a, Coordinate b, int side1A, int side2A, int side1B, int side2B) {
         Rectangle rect1 = new Rectangle(a.getXcord(), a.getYcord(), side1A, side2A);
@@ -230,6 +232,41 @@ class game extends Canvas {
     }
 
     //Here, we just write the commands to draw a bunch of stuff.
+
+    public void newgame(Graphics g)
+    {
+        p1 = new tank(new Coordinate(40, 150, 30), Color.RED);
+        p2 = new tank(new Coordinate(350, 150, 30), Color.BLUE);
+        p1location = new Coordinate();
+        p2location = new Coordinate();
+
+        myX = p1.getCoordinate().getXcord();
+        myY = p1.getCoordinate().getYcord();
+        yourX = p2.getCoordinate().getXcord();
+        yourY = p2.getCoordinate().getYcord();
+        bullet1X = 0;
+        bullet1Y = 0;
+        bullet2X = 0;
+        bullet2Y =0 ;
+        shoot1 = false;
+        shoot2 = false;
+        player1win = false;
+        player2win = false;
+
+
+        g.setColor(Color.RED);
+        g.fillRect(myX, myY, 30, 30);
+
+        g.setColor(Color.BLUE);
+        g.fillRect(p2.getCoordinate().getXcord(), p2.getCoordinate().getYcord(), 30, 30);
+
+
+        g.setColor(Color.BLACK);
+        g.fillRect(320, 50, 20, 275);
+        g.fillRect(80, 50, 20, 275);
+        repaint();
+    }
+
     public void paint(Graphics g) {
 
         g.setColor(Color.RED);
@@ -266,7 +303,8 @@ class game extends Canvas {
             g.clearRect(p2.getCoordinate().getXcord(), p2.getCoordinate().getYcord(), 30, 30);
             bullet1X = bullet1X - 1;
             g.clearRect(bullet1X, bullet1Y, 5, 5);
-
+            player1win = true;
+            newgame(g);
         }
         if (checkcollision(c, p1.getCoordinate(), 5, 5, 30, 30) == true)
 
@@ -275,7 +313,8 @@ class game extends Canvas {
             g.clearRect(p1.getCoordinate().getXcord(), p1.getCoordinate().getYcord(), 30, 30);
             bullet1X = bullet1X;
             g.clearRect(bullet2X, bullet2Y, 5, 5);
-
+            player2win = true;
+            newgame(g);
         }
         repaint();
 
@@ -308,7 +347,7 @@ public class MyDrawing
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game ex = new game();
         //Set the boundaries of the window
-        window.setBounds(60,60, 400, 400);
+        window.setBounds(0,0, 400, 400);
         window.getContentPane().setBackground(Color.LIGHT_GRAY);
         //Attach the Canvas (the figures we just described) to the window
         window.getContentPane().add(ex);
@@ -316,6 +355,8 @@ public class MyDrawing
         //make the window visible
         window.setVisible(true);
         ex.requestFocus();
+
+
     }
 }
 
