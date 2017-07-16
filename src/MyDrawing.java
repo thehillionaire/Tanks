@@ -6,7 +6,7 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-//TODO fix player 2 weirdness w bullets and collisions, fix righthand obstacle collision weirdness, implement visible score, crashes?
+//TODO fix righthand obstacle collision weirdness, implement visible score, crashes?
 
 //The class that contains the paint method needs to inherit from Component, the class that contains the pain method and binds the component to the window.
 
@@ -35,7 +35,7 @@ class tank {
 }
 
 
-class game extends Canvas {
+class game extends JPanel {
 
     tank p1 = new tank(new Coordinate(40, 150, 30), Color.RED);
     tank p2 = new tank(new Coordinate(350, 150, 30), Color.BLUE);
@@ -54,6 +54,18 @@ class game extends Canvas {
     boolean shoot2 = false;
     boolean player1win = false;
     boolean player2win = false;
+    int player1score =0;
+    int player2score=0;
+
+    public int getPlayer1score()
+    {
+        return player1score;
+    }
+    public int getPlayer2score()
+    {
+        return player2score;
+    }
+
 
     public boolean checkcollision(Coordinate a, Coordinate b, int side1A, int side2A, int side1B, int side2B) {
         Rectangle rect1 = new Rectangle(a.getXcord(), a.getYcord(), side1A, side2A);
@@ -65,6 +77,8 @@ class game extends Canvas {
     }
 
     public game() {
+
+
         addKeyListener(new KeyAdapter() {
             @Override
             public void keyPressed(KeyEvent evt) {
@@ -93,6 +107,9 @@ class game extends Canvas {
             }
 
         });
+
+
+
     }
 
     public void moveIt2(KeyEvent evt) {
@@ -304,7 +321,9 @@ class game extends Canvas {
             bullet1X = bullet1X - 1;
             g.clearRect(bullet1X, bullet1Y, 5, 5);
             player1win = true;
+            player1score++;
             newgame(g);
+            System.out.println("Tank 1: "+player1score);
         }
         if (checkcollision(c, p1.getCoordinate(), 5, 5, 30, 30) == true)
 
@@ -314,7 +333,10 @@ class game extends Canvas {
             bullet1X = bullet1X;
             g.clearRect(bullet2X, bullet2Y, 5, 5);
             player2win = true;
+            player2score++;
             newgame(g);
+            System.out.println("Tank 2: "+player2score);
+
         }
         repaint();
 
@@ -325,9 +347,10 @@ class game extends Canvas {
 
         }
 
-        if (checkcollision(c, new Coordinate(80, 50), 5, 5, 20, 275) || checkcollision(c, new Coordinate(80, 50), 5, 5, 20, 275))
+        if (checkcollision(c, new Coordinate(320, 50), 5, 5, 20, 275) || checkcollision(c, new Coordinate(80, 50), 5, 5, 20, 275))
         {
-            bullet1X = bullet1X + 1;
+
+            bullet2X = bullet2X + 1;
             g.clearRect(bullet2X, bullet2Y, 5, 5);
 
         }
@@ -346,6 +369,8 @@ public class MyDrawing
         //Make it so that the program dies when we click on the close button
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         game ex = new game();
+
+
         //Set the boundaries of the window
         window.setBounds(0,0, 400, 400);
         window.getContentPane().setBackground(Color.LIGHT_GRAY);
