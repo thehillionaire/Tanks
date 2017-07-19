@@ -6,7 +6,7 @@
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.*;
-//TODO fix righthand obstacle collision weirdness, implement visible score, crashes?
+//TODO  implement visible score, crashes?
 
 //The class that contains the paint method needs to inherit from Component, the class that contains the pain method and binds the component to the window.
 
@@ -46,17 +46,15 @@ class game extends JPanel {
     int myY = p1.getCoordinate().getYcord();
     int yourX = p2.getCoordinate().getXcord();
     int yourY = p2.getCoordinate().getYcord();
-    int bullet1X;
-    int bullet1Y;
-    int bullet2X;
-    int bullet2Y;
+    int bullet1X = 500;
+    int bullet1Y = 500;
+    int bullet2X = 500;
+    int bullet2Y = 500;
     boolean shoot1 = false;
     boolean shoot2 = false;
-    boolean player1win = false;
-    boolean player2win = false;
     int player1score =0;
     int player2score=0;
-
+    boolean [] keylist = new boolean [10];  //A,S,W,D,R,Left,Down,Up,Right,Enter
     public int getPlayer1score()
     {
         return player1score;
@@ -78,83 +76,174 @@ class game extends JPanel {
 
     public game() {
 
-
         addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent evt) {
-                moveIt(evt);
+            public void keyPressed(KeyEvent evt) {   //taken from github example
+                getPress(evt);
             }
 
         });
+
         addKeyListener(new KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent evt) {
-                ShootIt(evt);
+            public void keyReleased(KeyEvent evt) {
+                getRelease(evt);
             }
 
         });
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent evt) {
-                moveIt2(evt);
-            }
 
-        });
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent evt) {
-                ShootIt2(evt);
-            }
-
-        });
 
 
 
     }
 
-    public void moveIt2(KeyEvent evt) {
+    public void getPress(KeyEvent evt)
+    {
+        int key = evt.getKeyCode();
+
+        if(key == KeyEvent.VK_A)
+        {
+            keylist[0] = true;
+
+        }
+        else if(key == KeyEvent.VK_S)
+        {
+            keylist[1] = true;
+        }
+        else if(key == KeyEvent.VK_W)
+        {
+            keylist[2] = true;
+        }
+        else if(key == KeyEvent.VK_D)
+        {
+            keylist[3] = true;
+        }
+        else if(key == KeyEvent.VK_R)
+        {
+            keylist[4] = true;
+        }
+        else if(key == KeyEvent.VK_LEFT)
+        {
+            keylist[5] = true;
+        }
+        else if(key == KeyEvent.VK_DOWN)
+        {
+            keylist[6] = true;
+        }
+        else if(key == KeyEvent.VK_UP)
+        {
+            keylist[7] = true;
+        }
+        else if(key == KeyEvent.VK_RIGHT)
+        {
+            keylist[8] = true;
+        }
+        else if(key == KeyEvent.VK_ENTER)
+        {
+            keylist[9] = true;
+        }
+
+    }
+
+    public void getRelease(KeyEvent evt)
+    {
+        int key = evt.getKeyCode();
+
+        if(key == KeyEvent.VK_A)
+        {
+            keylist[0] = false;
+
+
+        }
+        else if(key == KeyEvent.VK_S)
+        {
+            keylist[1] = false;
+        }
+        else if(key == KeyEvent.VK_W)
+        {
+            keylist[2] = false;
+        }
+        else if(key == KeyEvent.VK_D)
+        {
+            keylist[3] = false;
+        }
+        else if(key == KeyEvent.VK_R)
+        {
+            keylist[4] = false;
+        }
+        else if(key == KeyEvent.VK_LEFT)
+        {
+            keylist[5] = false;
+        }
+        else if(key == KeyEvent.VK_DOWN)
+        {
+            keylist[6] = false;
+        }
+        else if(key == KeyEvent.VK_UP)
+        {
+            keylist[7] = false;
+        }
+        else if(key == KeyEvent.VK_RIGHT)
+        {
+            keylist[8] = false;
+        }
+        else if(key == KeyEvent.VK_ENTER)
+        {
+            keylist[9] = false;
+        }
+
+    }
+
+
+    public void moveIt2() {
 
         int lastspotX = yourX;
         int lastspotY = yourY;
 
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_S:
-                if (yourY >= 350) {
-                    yourY = 350;
-                } else {
-                    yourY += 25;
-                }
-                break;
-            case KeyEvent.VK_W:
-                if (yourY <= 1) {
-                    yourY = 1;
-                } else {
-                    yourY -= 25;
-                }
-                break;
-            case KeyEvent.VK_A:
-                if (yourX <= 1) {
-                    yourX = 1;
-                } else {
-                    yourX -= 25;
-                }
-                break;
-            case KeyEvent.VK_D:
-                if (yourX >= 375) {
-                    yourX = 375;
-                } else {
-                    yourX += 25;
-                }
-
-                break;
+       if(keylist[1])     //S, player 2 down
+       {
+           if (yourY >= 350)
+           {
+               yourY = 350;
+           } else
+           {
+               yourY += 1;
+           }
+       }
+       if(keylist[2])
+       {
+           if (yourY <= 1) {
+               yourY = 1;
+           } else {
+               yourY -= 1;
+           }
+       }
+        if(keylist[0])
+        {
+            if (yourX <= 1)
+            {
+                yourX = 1;
+            } else {
+                yourX -= 1;
+            }
         }
+         if(keylist[3])
+         {
+             if (yourX >= 375) {
+                 yourX = 375;
+             } else {
+                 yourX += 1;
+             }
+
+         }
+
         repaint();
         p2location.setCoordinate(yourX, yourY);
-        if (evt.getKeyCode() == KeyEvent.VK_W || evt.getKeyCode() == KeyEvent.VK_S || evt.getKeyCode() == KeyEvent.VK_A || evt.getKeyCode() == KeyEvent.VK_D) {
+        if (keylist[0] || keylist[1] || keylist[2] || keylist[3]) {
 
 
             if (checkcollision(p2location, new Coordinate(320, 50), 30, 30, 20, 275) || checkcollision(p2location, new Coordinate(80, 50), 30, 30, 20, 275)) {
-                System.out.println("collision detected with wall!");
+
                 yourX = lastspotX;
                 yourY = lastspotY;
 
@@ -165,50 +254,52 @@ class game extends JPanel {
         repaint();
     }
 
-    public void moveIt(KeyEvent evt) {
+    public void moveIt() {
 
         int lastspotX = myX;
         int lastspotY = myY;
 
 
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_DOWN:
-                if (myY >= 350) {
-                    myY = 350;
-                } else {
-                    myY += 25;
-                }
-                break;
-            case KeyEvent.VK_UP:
-                if (myY <= 1) {
-                    myY = 1;
-                } else {
-                    myY -= 25;
-                }
-                break;
-            case KeyEvent.VK_LEFT:
-                if (myX <= 1) {
-                    myX = 1;
-                } else {
-                    myX -= 25;
-                }
-                break;
-            case KeyEvent.VK_RIGHT:
-                if (myX >= 375) {
-                    myX = 375;
-                } else {
-                    myX += 25;
-                }
-
-                break;
+        if(keylist[6])
+        {
+            if (myY >= 350) {
+                myY = 350;
+            } else {
+                myY += 1;
+            }
         }
+        if(keylist[7])
+        {
+            if (myY <= 1) {
+                myY = 1;
+            } else {
+                myY -= 1;
+            }
+        }
+        if(keylist[5])
+        {
+            if (myX <= 1) {
+                myX = 1;
+            } else {
+                myX -= 1;
+            }
+        }
+        if(keylist[8]) {
+            if (myX >= 375) {
+                myX = 375;
+            } else {
+                myX += 1;
+            }
+
+        }
+
         repaint();
         p1location.setCoordinate(myX, myY);
-        if (evt.getKeyCode() == KeyEvent.VK_DOWN || evt.getKeyCode() == KeyEvent.VK_UP || evt.getKeyCode() == KeyEvent.VK_LEFT || evt.getKeyCode() == KeyEvent.VK_RIGHT) {
+        if (keylist[5] || keylist[6]  || keylist[7]  || keylist[8]  ) {
 
 
             if (checkcollision(p1location, new Coordinate(320, 50), 30, 30, 20, 275) || checkcollision(p1location, new Coordinate(80, 50), 30, 30, 20, 275)) {
-                System.out.println("collision detected with wall!");
+
                 myX = lastspotX;
                 myY = lastspotY;
 
@@ -219,30 +310,31 @@ class game extends JPanel {
         repaint();
     }
 
-    public void ShootIt2(KeyEvent evt) {
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_R:
+    public void ShootIt2() {
+
+        if(keylist[4])
+        {
 
                 shoot2 = true;
                 bullet2X = yourX - 15;
                 bullet2Y = yourY + 15;
 
-        }
-    }
+        }}
 
-    public void ShootIt(KeyEvent evt) {
-        switch (evt.getKeyCode()) {
-            case KeyEvent.VK_ENTER:
+
+    public void ShootIt() {
+       if(keylist[9])
+       {
 
                 shoot1 = true;
                 bullet1X = myX + 30;
                 bullet1Y = myY + 15;
 
-        }
+
         //repaint();
         // shoot = false;
 
-    }
+    }}
 
     public void Checkwallcollision(tank t) {
 
@@ -261,15 +353,16 @@ class game extends JPanel {
         myY = p1.getCoordinate().getYcord();
         yourX = p2.getCoordinate().getXcord();
         yourY = p2.getCoordinate().getYcord();
-        bullet1X = 0;
-        bullet1Y = 0;
-        bullet2X = 0;
-        bullet2Y =0 ;
+        bullet1X = 500;
+        bullet1Y = 500;
+        bullet2X = 500;
+        bullet2Y = 500;
         shoot1 = false;
         shoot2 = false;
-        player1win = false;
-        player2win = false;
-
+        for(int i = 0; i < 10; i++)
+        {
+            keylist[i] = false;
+        }
 
         g.setColor(Color.RED);
         g.fillRect(myX, myY, 30, 30);
@@ -297,6 +390,12 @@ class game extends JPanel {
         g.fillRect(320, 50, 20, 275);
         g.fillRect(80, 50, 20, 275);
 
+        moveIt();
+        moveIt2();
+        ShootIt();
+        ShootIt2();
+        repaint();
+
         if (shoot1 == true) {
 
             g.fillOval(bullet1X, bullet1Y, 5, 5);
@@ -317,10 +416,8 @@ class game extends JPanel {
 
         if (checkcollision(b, p2.getCoordinate(), 5, 5, 30, 30) == true) {
             System.out.println("collision detected! Player 1 shot Player 2");
-            g.clearRect(p2.getCoordinate().getXcord(), p2.getCoordinate().getYcord(), 30, 30);
-            bullet1X = bullet1X - 1;
-            g.clearRect(bullet1X, bullet1Y, 5, 5);
-            player1win = true;
+
+
             player1score++;
             newgame(g);
             System.out.println("Tank 1: "+player1score);
@@ -328,11 +425,8 @@ class game extends JPanel {
         if (checkcollision(c, p1.getCoordinate(), 5, 5, 30, 30) == true)
 
         {
-            System.out.println("collision detected! Player 2 shot player 1");
-            g.clearRect(p1.getCoordinate().getXcord(), p1.getCoordinate().getYcord(), 30, 30);
-            bullet1X = bullet1X;
-            g.clearRect(bullet2X, bullet2Y, 5, 5);
-            player2win = true;
+            System.out.println("collision detected! Player 2 shot Player 1r");
+
             player2score++;
             newgame(g);
             System.out.println("Tank 2: "+player2score);
@@ -342,7 +436,8 @@ class game extends JPanel {
 
         if (checkcollision(b, new Coordinate(320, 50), 5, 5, 20, 275) || checkcollision(b, new Coordinate(80, 50), 5, 5, 20, 275))
         {
-            bullet1X = bullet1X - 1;
+            bullet1X = 500;
+            bullet1Y = 500;
             g.clearRect(bullet1X, bullet1Y, 5, 5);
 
         }
@@ -350,7 +445,8 @@ class game extends JPanel {
         if (checkcollision(c, new Coordinate(320, 50), 5, 5, 20, 275) || checkcollision(c, new Coordinate(80, 50), 5, 5, 20, 275))
         {
 
-            bullet2X = bullet2X + 1;
+            bullet2Y = 500;
+            bullet2X = 500;
             g.clearRect(bullet2X, bullet2Y, 5, 5);
 
         }
