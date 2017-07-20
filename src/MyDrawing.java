@@ -63,7 +63,8 @@ class game extends JPanel {
     {
         return player2score;
     }
-
+    JLabel redscoreboard = new JLabel();
+    JLabel bluescoreboard = new JLabel( );
 
     public boolean checkcollision(Coordinate a, Coordinate b, int side1A, int side2A, int side1B, int side2B) {
         Rectangle rect1 = new Rectangle(a.getXcord(), a.getYcord(), side1A, side2A);
@@ -74,7 +75,12 @@ class game extends JPanel {
             return false;
     }
 
+
     public game() {
+
+        super(new BorderLayout());
+
+
 
         addKeyListener(new KeyAdapter() {
             @Override
@@ -92,7 +98,10 @@ class game extends JPanel {
 
         });
 
-
+        redscoreboard.setText("Red Tank Score: " + getPlayer1score() );
+        bluescoreboard.setText("Blue Tank Score: " + getPlayer2score() + "\n");
+        add(redscoreboard, BorderLayout.NORTH);
+        add(bluescoreboard, BorderLayout.SOUTH);
 
 
     }
@@ -359,6 +368,8 @@ class game extends JPanel {
         bullet2Y = 500;
         shoot1 = false;
         shoot2 = false;
+        redscoreboard.setText("Red Tank Score: " + getPlayer1score() );
+        bluescoreboard.setText("Blue Tank Score: " + getPlayer2score() + "\n");
         for(int i = 0; i < 10; i++)
         {
             keylist[i] = false;
@@ -377,7 +388,7 @@ class game extends JPanel {
         repaint();
     }
 
-    public void paint(Graphics g) {
+    public void paintComponent(Graphics g) {
 
         g.setColor(Color.RED);
         g.fillRect(myX, myY, 30, 30);
